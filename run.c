@@ -74,7 +74,7 @@ void *m_malloc(size_t size) {
 		end = base;
 	}
 	if (size % 4 != 0){
-		size = (size+4) - (size%4);
+		size = (size/4+1) * 4;
 	}
 	aim = find_meta(end, size);
 
