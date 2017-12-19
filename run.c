@@ -63,7 +63,36 @@ p_meta find_meta(p_meta *last, size_t size) {
 }
 
 void *m_malloc(size_t size) {
+	p_meta aim;
+	p_meta aim2;
 
+	if (base == 0)
+	{
+		base = sbrk(0);
+		end = base;
+	}
+	if (size % 4 != 0){
+		size = (size+4) - (size%4);
+	}
+	aim = find_meta(end, size);
+
+	int length= size + META_SIZE;
+	aim2 = end;
+	end = end + length;
+
+	if (brk(end)== -1) return;
+
+	aim2 -> free = 0;
+	aim2 -> next = 0;
+	aim2 -> prev = aim;
+	aim2 -> size = size;
+
+	if (aim != -1)
+	{
+		aim -> next = aim2;
+		aim = aim2;
+	}
+	return aim ->data;
 }
 
 void m_free(void *ptr) {
